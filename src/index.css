@@ -1,0 +1,8 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@import url(https://db.onlinewebfonts.com/c/30c7b0ba24b3056fd3b4d95abf785da0?family=Maax+Bold);
+
+* {
+  font-family: 'Maax Bold' ;
+}
