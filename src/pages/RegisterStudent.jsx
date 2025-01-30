@@ -10,7 +10,7 @@ const RegisterStudent = () => {
     const [message, setMessage] = useState("");
     const navigate = useNavigate();
 
-    const schoolCode = localStorage.getItem("schoolCode"); // Ambil school_code dari localStorage
+    const schoolCode = localStorage.getItem("schoolCode"); 
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -28,8 +28,8 @@ const RegisterStudent = () => {
             if (response.status === 200) {
                 setMessage("Registrasi berhasil. Lanjutkan ke daftar chapter.");
                 localStorage.setItem("session_id", response.data.data.session_id);
-                localStorage.setItem("name", formData.name); // Simpan session_id
-                navigate("/greeting"); // Redirect ke daftar chapter
+                localStorage.setItem("name", formData.name); 
+                navigate("/greeting"); 
             }
         } catch (error) {
             if (error.response && error.response.status === 422) {
