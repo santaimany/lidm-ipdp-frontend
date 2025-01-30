@@ -108,7 +108,7 @@ const RegisterStudent = () => {
 
                 {/* **Illustration Section (right side)** */}
                 <div className="w-full md:w-1/2 flex items-center justify-center">
-                    <div className="relative w-full h-full max-w-[450px]">
+                    <div className="relative w-full h-full max-w-[450px] animate-float">
                         <img
                             src={Superhero}
                             alt="Superhero"

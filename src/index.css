@@ -6,3 +6,26 @@
 * {
   font-family: 'Maax Bold' ;
 }
+
+@keyframes float {
+  0% {
+    transform: translateY(0);
+  }
+  25% {
+    transform: translateY(-40px); 
+  }
+  50% {
+    transform: translateY(20px);
+  }
+  75% {
+    transform: translateY(30px); 
+  }
+  100% {
+    transform: translateY(0); 
+  }
+}
+
+.animate-float {
+  animation: float 10s ease-in-out infinite;
+}
+
