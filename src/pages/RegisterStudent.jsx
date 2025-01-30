@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-
+import Superhero from "../assets/superhro.svg"
 const RegisterStudent = () => {
     const [formData, setFormData] = useState({
         name: "",
@@ -27,8 +27,9 @@ const RegisterStudent = () => {
 
             if (response.status === 200) {
                 setMessage("Registrasi berhasil. Lanjutkan ke daftar chapter.");
-                localStorage.setItem("session_id", response.data.data.session_id); // Simpan session_id
-                navigate("/chapters"); // Redirect ke daftar chapter
+                localStorage.setItem("session_id", response.data.data.session_id);
+                localStorage.setItem("name", formData.name); // Simpan session_id
+                navigate("/greeting"); // Redirect ke daftar chapter
             }
         } catch (error) {
             if (error.response && error.response.status === 422) {
@@ -54,7 +55,7 @@ const RegisterStudent = () => {
 
             {/* **Main Content** */}
             <div className="relative flex flex-col md:flex-row items-center w-full max-w-5xl bg-transparent">
-                {/* **Form Container** */}
+                {/* **Form Container (left side)** */}
                 <div className="w-full md:w-1/2 bg-white p-10 rounded-xl shadow-xl animate-fade-in">
                     <h1 className="text-3xl font-bold text-teal-600 mb-6">Registrasi Siswa</h1>
                     <p className="text-gray-500 mb-6">
@@ -105,13 +106,13 @@ const RegisterStudent = () => {
                     {message && <p className="mt-4 text-red-500 font-medium">{message}</p>}
                 </div>
 
-                {/* **Illustration Section** */}
+                {/* **Illustration Section (right side)** */}
                 <div className="w-full md:w-1/2 flex items-center justify-center">
-                    <div className="relative w-64 h-64 md:w-80 md:h-80">
+                    <div className="relative w-full h-full max-w-[450px]">
                         <img
-                            src="/hero_character.png"
+                            src={Superhero}
                             alt="Superhero"
-                            className="w-full h-full object-contain"
+                            className="w-full h-screen md:ml-20 object-contain hidden md:block "
                         />
                     </div>
                 </div>
@@ -119,5 +120,7 @@ const RegisterStudent = () => {
         </div>
     );
 };
+
+
 
 export default RegisterStudent;

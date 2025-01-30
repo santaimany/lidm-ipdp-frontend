@@ -10,6 +10,7 @@ import Chapters from "./pages/Chapters";
 import RegisterStudent from "./pages/RegisterStudent";
 import ChapterDetail from "./pages/ChapterDetail";
 import StorybookDetail from "./pages/StorybookDetail";
+import Greeting from "./pages/Greeting";
 
 import StartQuiz from "./pages/StartQuiz";
 import PlayQuiz from "./pages/PlayQuiz";
@@ -25,6 +26,7 @@ function App() {
                 <Route path="/register" element={<Register />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/register-student" element={<RegisterStudent />} />
+                <Route path="/greeting" element={<Greeting/>} />
                 <Route path="/chapters" element={<Chapters />} />
                 <Route path="/dashboard" element={<Dashboard />} />;
                 <Route path="/chapters/:chapterId" element={<ChapterDetail />} />
