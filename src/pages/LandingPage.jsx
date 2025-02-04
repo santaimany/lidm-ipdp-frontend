@@ -1,190 +1,245 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import Magnet from "../effects/Magnet";
-import BlurText from "../effects/BlurText";
+import { gsap } from "gsap";
+import { MotionPathPlugin } from "gsap/MotionPathPlugin";
 import Navbar from "../components/Navbar";
-import Superhero from "../assets/superhro.svg"
+import Magnet from "../effects/Magnet";
+import Noise from "../effects/Noise";
+
+gsap.registerPlugin(MotionPathPlugin);
+
 const LandingPage = () => {
-    const [schoolCode, setSchoolCode] = useState("");
-    const [message, setMessage] = useState("");
-    const [formVisible, setFormVisible] = useState(false);
-    const [particles, setParticles] = useState([]);
-    const [selectedVoice, setSelectedVoice] = useState(null); // Simpan suara yang dipilih
-    const navigate = useNavigate();
-    const buttonRef = useRef(null);
+  const [schoolCode, setSchoolCode] = useState("");
+  const [message, setMessage] = useState("");
+  const [formVisible, setFormVisible] = useState(false);
+  const [selectedVoice, setSelectedVoice] = useState(null);
+  const [heroTitle, setHeroTitle] = useState("Welcome to Mossel!");
+  const [heroSubtitle, setHeroSubtitle] = useState("Let's start our English learning adventure! 🚀");
 
-    useEffect(() => {
-        const loadVoices = () => {
-            const availableVoices = window.speechSynthesis.getVoices();
-            
-            // Cari suara "Google UK English Male"
-            const googleUKMale = availableVoices.find(voice => 
-                voice.name.includes("Google UK English Male") && voice.lang === "en-GB"
-            );
+  const navigate = useNavigate();
+  const startButtonRef = useRef(null);
+  const heroRef = useRef(null);
+  const floatingElements = useRef([]);
 
-            if (googleUKMale) {
-                setSelectedVoice(googleUKMale);
-            } else if (availableVoices.length > 0) {
-                setSelectedVoice(availableVoices[0]); // Pakai suara default jika tidak tersedia
+  // Animasi elemen mengambang
+  useEffect(() => {
+    gsap.utils.toArray(".floating").forEach((element, i) => {
+      gsap.to(element, {
+        duration: 3 + i,
+        y: 30,
+        repeat: -1,
+        yoyo: true,
+        ease: "power1.inOut"
+      });
+    });
+  }, []);
+
+  // Animasi background shapes
+  useEffect(() => {
+    const shapes = gsap.utils.toArray(".shape");
+    shapes.forEach((shape, i) => {
+      gsap.to(shape, {
+        duration: 10 + i * 2,
+        rotation: 360,
+        repeat: -1,
+        ease: "none",
+        transformOrigin: "50% 50%"
+      });
+    });
+  }, []);
+
+  // Text-to-Speech setup
+  useEffect(() => {
+    const loadVoices = () => {
+      const voices = window.speechSynthesis.getVoices();
+      if (voices.length > 0) {
+        const googleUKMale = voices.find(v => 
+          v.name.includes("Google UK English Male") && v.lang === "en-GB"
+        );
+        setSelectedVoice(googleUKMale || voices[0]);
+      } else {
+        setTimeout(loadVoices, 100);
+      }
+    };
+    loadVoices();
+    window.speechSynthesis.onvoiceschanged = loadVoices;
+  }, []);
+
+  const speakText = (text) => {
+    if ("speechSynthesis" in window) {
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = "en-GB";
+      if (selectedVoice) utterance.voice = selectedVoice;
+      window.speechSynthesis.speak(utterance);
+    }
+  };
+
+  const handleStart = () => {
+    // Animasi tombol
+    gsap.timeline()
+      .to(startButtonRef.current, {
+        duration: 0.3,
+        scale: 1.2,
+        ease: "back.out(2)",
+        yoyo: true,
+        repeat: 1
+      })
+      .to(heroRef.current, {
+        duration: 0.8,
+        opacity: 0,
+        y: -50,
+        ease: "power2.out",
+        onComplete: () => {
+          setHeroTitle("🧙School Code Magic!");
+          setHeroSubtitle("Enter your secret school code to begin the quest!");
+          setFormVisible(true);
+          
+          gsap.fromTo(heroRef.current, 
+            { opacity: 0, y: 50 },
+            { 
+              opacity: 1,
+              y: 0,
+              duration: 0.8,
+              ease: "elastic.out(1, 0.5)",
+              onComplete: () => speakText("Enter your secret school code to begin the quest!")
             }
-        };
-
-        loadVoices();
-        window.speechSynthesis.onvoiceschanged = loadVoices;
-    }, []);
-
-    const speakText = (text) => {
-        if ('speechSynthesis' in window) {
-            const speech = new SpeechSynthesisUtterance(text);
-            speech.lang = "en-GB"; // Set bahasa ke British English
-            if (selectedVoice) speech.voice = selectedVoice;
-            speech.rate = 1;
-            window.speechSynthesis.speak(speech);
-        } else {
-            alert("Browser Anda tidak mendukung fitur Text-to-Speech.");
+          );
         }
-    };
+      }, "-=0.5");
+  };
 
-    const handleStart = () => {
-        const rect = buttonRef.current.getBoundingClientRect();
-        createParticles(rect);
-        setTimeout(() => {
-            setParticles([]);
-            setFormVisible(true);
-        }, 1000);
-    };
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await axios.post("http://127.0.0.1:8000/api/student/step1", {
+        school_code: schoolCode,
+      });
+      if (response.status === 200) {
+        const successMessage = "Hooray! Code accepted! Let's go! 🎉";
+        setMessage(successMessage);
+        speakText(successMessage);
+        localStorage.setItem("schoolCode", schoolCode);
+        
+        // Animasi sebelum navigasi
+        gsap.to(heroRef.current, {
+          duration: 0.8,
+          scale: 1.2,
+          opacity: 0,
+          ease: "power2.in",
+          onComplete: () => navigate("/register-student")
+        });
+      }
+    } catch (error) {
+      const errorMessage = error.response?.status === 422 
+        ? "Oops! Wrong code. Try again! 🔍"
+        : "Uh-oh! Something went wrong. Let's try again!";
+      setMessage(errorMessage);
+      speakText(errorMessage);
+      
+      // Animasi error
+      gsap.to(".form-input", {
+        duration: 0.1,
+        x: -10,
+        repeat: 5,
+        yoyo: true,
+        ease: "power1.inOut"
+      });
+    }
+  };
 
-    const createParticles = (rect) => {
-        const particleArray = [];
-        for (let i = 0; i < 20; i++) {
-            const angle = Math.random() * 2 * Math.PI;
-            const speed = Math.random() * 50 + 50;
-            particleArray.push({
-                x: rect.x + rect.width / 2,
-                y: rect.y + rect.height / 2,
-                angle,
-                speed,
-                size: Math.random() * 8 + 6,
-                color: `hsl(${Math.random() * 360}, 100%, 50%)`,
-            });
-        }
-        setParticles(particleArray);
-    };
+  return (
+    <>
+      <Navbar />
+      <div className="pt-20 min-h-screen flex items-center justify-center relative overflow-hidden 
+        bg-gradient-to-br from-teal-500 via-teal-700 to-teal-900 
+        bg-[length:300%_300%] animate-gradient">
+        
+        
+        
+        {/* Floating Elements */}
+        <div className="shape absolute top-20 left-10 w-64 h-64 bg-[#d7edfa] rounded-full opacity-20 blur-3xl" />
+        <div className="shape absolute bottom-20 right-10 w-64 h-64 bg-[#D7efda] rounded-full opacity-20 blur-3xl" />
+        
+        {/* Sparkles */}
+  
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-
-        try {
-            const response = await axios.post("http://127.0.0.1:8000/api/student/step1", {
-                school_code: schoolCode,
-            });
-
-            if (response.status === 200) {
-                const successMessage = "School code is valid. Continue registration.";
-                setMessage(successMessage);
-                speakText(successMessage);
-                localStorage.setItem("schoolCode", schoolCode);
-                navigate("/register-student");
-            }
-        } catch (error) {
-            const errorMessage = error.response && error.response.status === 422
-                ? "Invalid school code. Please try again."
-                : "An error occurred. Please try again later.";
-            setMessage(errorMessage);
-            speakText(errorMessage);
-        }
-    };
-
-    return (
-        <>
-            <Navbar />
-            <div className="relative min-h-screen bg-[#F9E4CF] flex flex-col items-center justify-center overflow-hidden">
-                {/* Background Illustration */}
-                <div className="absolute top-0 left-0 w-full h-full overflow-hidden">
-                    <div className="absolute top-1/4 left-10 w-64 h-64 bg-yellow-400 rounded-full blur-3xl opacity-50"></div>
-                    <div className="absolute bottom-1/4 right-10 w-64 h-64 bg-red-400 rounded-full blur-3xl opacity-50"></div>
-                </div>
-
-                <div className="z-10 text-center max-w-xl mx-auto">
-                    {/* Title dengan tombol TTS */}
-                    <div className="flex items-center justify-center space-x-2">
-                        <BlurText
-                            text="Welcome to the Wonderful World of English!"
-                            delay={150}
-                            animateBy="words"
-                            direction="top"
-                            className="text-7xl md:text-7xl font-bold text-orange-900"
-                        />
-                        <button
-                            onClick={() => speakText("Welcome to the Wonderful World of English!")}
-                            className="text-orange-900 text-2xl hover:text-orange-600 transition"
-                            aria-label="Read aloud"
-                        >
-                            🔊
-                        </button>
-                    </div>
-
-                    {/* Subtitle dengan tombol TTS */}
-                    <div className="flex items-center justify-center space-x-2">
-                        <BlurText
-                            text="Explore the exciting journey with us. Let's get started!"
-                            delay={100}
-                            animateBy="words"
-                            direction="bottom"
-                            className="mt-4 text-2xl text-orange-700"
-                        />
-                        <button
-                            onClick={() => speakText("Explore the exciting journey with us. Let's get started!")}
-                            className="text-orange-700 text-2xl hover:text-orange-500 transition"
-                            aria-label="Read aloud"
-                        >
-                            🔊
-                        </button>
-                    </div>
-
-                    {/* Button untuk menampilkan form */}
-                    {!formVisible && (
-                        <Magnet>
-                            <button
-                                ref={buttonRef}
-                                onClick={handleStart}
-                                className="mt-8 w-32 h-32 bg-yellow-500 text-white font-bold text-3xl rounded-full shadow-xl hover:bg-yellow-600 transition duration-300 flex items-center justify-center"
-                            >
-                                Start
-                            </button>
-                        </Magnet>
-                    )}
-
-                    {/* Form untuk kode sekolah */}
-                    {formVisible && (
-                        <div className="mt-12 space-y-6 transition-all duration-500">
-                            <form onSubmit={handleSubmit} className="space-y-6">
-                                <input
-                                    type="text"
-                                    placeholder="Enter school code"
-                                    value={schoolCode}
-                                    onChange={(e) => setSchoolCode(e.target.value)}
-                                    required
-                                    className="w-full px-6 py-4 text-2xl border border-black bg-orange-200 text-orange-900 rounded-lg shadow focus:outline-none transition duration-300 ease-in-out focus:ring-4 focus:ring-yellow-500"
-                                />
-                                <button
-                                    type="submit"
-                                    className="w-full px-6 py-4 bg-orange-500 hover:bg-orange-700 transition text-2xl font-bold rounded-lg shadow-lg"
-                                >
-                                    Submit
-                                </button>
-                            </form>
-                        </div>
-                    )}
-
-                    {message && (
-                        <p className="mt-6 text-red-500 text-xl font-medium">{message}</p>
-                    )}
-                </div>
+        <div ref={heroRef} className="z-10 text-center max-w-2xl px-4">
+          <div className="mb-8">
+            <div className="flex items-center justify-center space-x-3 floating">
+              <h1 className="text-5xl md:text-6xl font-bold text-white drop-shadow-lg">
+                {heroTitle}
+              </h1>
+              <button
+                onClick={() => speakText(heroTitle)}
+                className="text-3xl animate-bounce hover:scale-110 transition"
+                aria-label="Read aloud"
+              >
+                🎤
+              </button>
             </div>
-        </>
-    );
+          </div>
+          
+          <div className="mb-12 floating">
+            <div className="flex items-center justify-center space-x-3">
+              <p className="text-2xl md:text-3xl text-white/90 font-medium">
+                {heroSubtitle}
+              </p>
+              <button
+                onClick={() => speakText(heroSubtitle)}
+                className="text-2xl hover:rotate-12 transition-transform"
+                aria-label="Read aloud"
+              >
+                🔈
+              </button>
+            </div>
+          </div>
+
+          {!formVisible ? (
+            <Magnet>
+              <button
+                ref={startButtonRef}
+                onClick={handleStart}
+                className="w-40 h-40 bg-[#fdd401] hover:bg-[#ffeb3b] font-bold text-3xl rounded-full 
+                  shadow-2xl hover:shadow-3xl transition-all transform hover:rotate-12
+                  border-4 border-white/20 hover:border-white/40"
+              >
+                START
+              </button>
+            </Magnet>
+          ) : (
+            <div className="mt-8 space-y-6">
+              <form onSubmit={handleSubmit} className="space-y-6 animate-popIn">
+                <input
+                  type="text"
+                  placeholder="✨ Enter magic code..."
+                  value={schoolCode}
+                  onChange={(e) => setSchoolCode(e.target.value)}
+                  required
+                  className="form-input w-full px-6 py-4 text-2xl bg-white/95 border-4 border-[#fdd401] 
+                    rounded-2xl shadow-xl focus:outline-none focus:ring-4 focus:ring-[#fdd401]/50
+                    placeholder:text-gray-400 hover:scale-[1.02] transition-transform"
+                />
+                <button
+                  type="submit"
+                  className="w-full px-6 py-4 bg-[#fdd401] hover:bg-[#ffd700] text-teal-900 
+                    text-2xl font-bold rounded-2xl shadow-xl hover:shadow-2xl 
+                    transition-all transform hover:scale-[1.02]"
+                >
+                  🔑 Submit
+                </button>
+              </form>
+              {message && (
+                <p className="mt-4 text-xl font-semibold animate-pulse">
+                  {message}
+                </p>
+              )}
+            </div>
+          )}
+        </div>
+      </div>
+    </>
+  );
 };
 
 export default LandingPage;
