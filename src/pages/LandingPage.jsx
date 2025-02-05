@@ -132,7 +132,7 @@ const LandingPage = () => {
         school_code: schoolCode,
       });
       if (response.status === 200) {
-        const successMessage = "Hooray! Code accepted! Let's go! 🎉";
+        const successMessage = "Hooray! Code accepted!";
         setMessage(successMessage);
         speakText(successMessage);
         localStorage.setItem("schoolCode", schoolCode);
@@ -150,7 +150,7 @@ const LandingPage = () => {
       const errorMessage =
         error.response?.status === 422
           ? "Oops! Wrong code. Try again! 🔍"
-          : "Uh-oh! Something went wrong. Let's try again!";
+          : " Something went wrong. Let's try again!";
       setMessage(errorMessage);
       speakText(errorMessage);
 
@@ -172,15 +172,16 @@ const LandingPage = () => {
   return (
     <>
       <Navbar />
+      
       <div
-        className="pt-20 min-h-screen flex items-center justify-center relative overflow-hidden 
+        className=" h-screen flex items-center justify-center relative 
         bg-gradient-to-br from-teal-500 via-teal-700 to-teal-900 
         bg-[length:300%_300%] animate-gradient"
       >
         <motion.img
                 src={roket}
                 alt="Roket"
-                className="w-32 h-32 relative z-50"
+                className="w-32 h-32 absolute z-50"
                 initial={{ x: "-500%", y: "100%", rotate: 0 }}
                 animate={{ x: "800%", y: "-700%", rotate: 0}}
                 transition={{
@@ -194,9 +195,9 @@ const LandingPage = () => {
         <div className="shape absolute top-20 left-10 w-64 h-64 bg-[#d7edfa] rounded-full opacity-20 blur-3xl" />
         <div className="shape absolute bottom-20 right-10 w-64 h-64 bg-[#D7efda] rounded-full opacity-20 blur-3xl" />
 
-        <div ref={heroRef} className="z-10 text-center max-w-2xl px-4">
+        <div ref={heroRef} className="z-10 text-center ">
           <div className="mb-8">
-            <div className="flex items-center justify-center space-x-3 floating">
+            <div className="flex items-center justify-center  floating">
               <h1 className="text-5xl md:text-6xl font-bold text-white drop-shadow-lg">
                 {heroTitle}
               </h1>
@@ -211,7 +212,7 @@ const LandingPage = () => {
           </div>
 
           <div className="mb-12 floating">
-            <div className="flex items-center justify-center space-x-3">
+            <div className="flex items-center justify-center">
               <p className="text-2xl md:text-3xl text-white/90 font-medium">
                 {heroSubtitle}
               </p>
