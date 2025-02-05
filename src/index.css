@@ -122,6 +122,89 @@
   }
 }
 
+@keyframes draw {
+  to {
+    stroke-dashoffset: 0; 
+  }
+}
 
+.swiper-coverflow {
+  padding: 50px 0;
+}
 
+.swiper-coverflow .swiper-slide {
+  transition: transform 0.3s ease, opacity 0.3s ease;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+}
 
+.swiper-coverflow .swiper-slide-shadow-left,
+.swiper-coverflow .swiper-slide-shadow-right {
+  background: rgba(0, 0, 0, 0.3);
+}
+
+.swiper-coverflow .swiper-pagination-bullet {
+  background: #fff;
+  opacity: 0.5;
+  width: 12px;
+  height: 12px;
+  transition: all 0.3s ease;
+}
+
+.swiper-coverflow .swiper-pagination-bullet-active {
+  opacity: 1;
+  transform: scale(1.2);
+  background: #fff;
+}
+
+.swiper-coverflow .swiper-button-next,
+.swiper-coverflow .swiper-button-prev {
+  color: white;
+  background: rgba(255, 255, 255, 0.1);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  backdrop-filter: blur(4px);
+  transition: all 0.3s ease;
+}
+
+.swiper-coverflow .swiper-button-next:hover,
+.swiper-coverflow .swiper-button-prev:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.swiper-coverflow .swiper-button-next::after,
+.swiper-coverflow .swiper-button-prev::after {
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+/* Custom overlay effect */
+.slide-overlay {
+  position: relative;
+}
+
+.slide-overlay::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.6) 0%, transparent 50%);
+}
+
+.swiper-slide-custom {
+  transition: transform 0.3s ease-in-out;
+}
+
+::-webkit-scrollbar {
+  display: none;
+}
+
+html {
+  scrollbar-width: none; /* Hapus scrollbar di Firefox */
+}
+
+/* Untuk IE dan Edge */
+html {
+  -ms-overflow-style: none;
+}

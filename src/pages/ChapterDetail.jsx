@@ -1,8 +1,14 @@
-import React, { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
-import { motion, AnimatePresence } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
+import React, { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import Element1 from "../components/Element";
+import ScrollProgress from "../components/ScrollProgress";
+import { default as Games1, default as Games2, default as Games3 } from "./Games";
+
+const Games = [Games1, Games2, Games3]
+
+
 
 // GuideModal dengan TTS (tetap ada di ChapterDetail)
 const GuideModal = ({ onClose }) => {
@@ -26,7 +32,7 @@ const GuideModal = ({ onClose }) => {
 
   useEffect(() => {
     speakText(guideText);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    
   }, []);
 
   return (
@@ -37,7 +43,7 @@ const GuideModal = ({ onClose }) => {
         exit={{ scale: 0.5, opacity: 0 }}
         className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full overflow-hidden mx-2"
       >
-        {/* Header */}
+        
         <div className="bg-gradient-to-r from-teal-600 to-teal-500 p-4 md:p-6 flex items-center justify-between">
           <div className="flex items-center space-x-3">
             <span className="text-3xl" aria-hidden="true">📘</span>
@@ -54,7 +60,7 @@ const GuideModal = ({ onClose }) => {
           </button>
         </div>
 
-        {/* Konten – Klik untuk memicu ulang TTS */}
+        
         <div
           className="p-4 md:p-6 space-y-4 md:space-y-6 cursor-pointer"
         
@@ -97,14 +103,32 @@ const ChapterDetail = () => {
   const [message, setMessage] = useState("");
   const [showGuide, setShowGuide] = useState(false);
   const [hoveredIndex, setHoveredIndex] = useState(null);
+ 
+  const [selectedGameIndex, setSelectedGameIndex] = useState(null);
   const navigate = useNavigate();
   const sessionId = localStorage.getItem("session_id");
 
+  const storageKey = `hasPlayedGame_${sessionId}`;
+
+  const [hasPlayedGame, setHasPlayedGame] = useState(() => {
+    return localStorage.getItem(storageKey) === "true";
+  });
+
   useEffect(() => {
+    if (!hasPlayedGame) {
+      setSelectedGameIndex(Math.floor(Math.random() * Games.length));
+    }
+  }, [hasPlayedGame]);
+
+
+
+  useEffect(() => {
+    if (!hasPlayedGame) return;
+
     const fetchStoryBooks = async () => {
       try {
         const response = await axios.get(
-          `http://127.0.0.1:8000/api/chapters/${chapterId}/storybooks`,
+          `https://mossel.up.railway.app/api/chapters/${chapterId}/storybooks`,
           { params: { session_id: sessionId } }
         );
         setStoryBooks(response.data.data);
@@ -114,12 +138,17 @@ const ChapterDetail = () => {
       }
     };
     fetchStoryBooks();
-  }, [chapterId, sessionId]);
+  }, [chapterId, sessionId, hasPlayedGame]);
+
+  const handleGameComplete = () => {
+    setHasPlayedGame(true);
+    localStorage.setItem(storageKey, "true"); // simpan di localStorage
+  };
 
   const goToQuiz = async () => {
     try {
       const response = await axios.get(
-        `http://127.0.0.1:8000/api/chapters/${chapterId}/quiz`,
+        `https://mossel.up.railway.app/api/chapters/${chapterId}/quiz`,
         { params: { session_id: sessionId } }
       );
       if (response.status === 200) {
@@ -135,10 +164,22 @@ const ChapterDetail = () => {
   const currentUnlockedIndex = storyBooks.findIndex(
     (sb, index) => !sb.is_read && (index === 0 || storyBooks[index - 1]?.is_read)
   );
+  
+  if (!hasPlayedGame) {
+    if (selectedGameIndex === null) return null; // atau bisa tampilkan loading spinner
+    const SelectedGame = Games[selectedGameIndex];
+    return (
+      <div className="">
+        {/* Komponen game diharapkan memanggil prop onComplete saat selesai */}
+        <SelectedGame onComplete={handleGameComplete} />
+      </div>
+    );
+  }
 
   return (
     <div className="relative min-h-screen bg-gradient-to-br from-teal-800 to-teal-900 overflow-hidden">
       {/* Background Animations */}
+      <ScrollProgress />
       <motion.div
         animate={{ scale: [1, 1.1, 1], opacity: [0.7, 0.3, 0.7] }}
         transition={{ duration: 20, repeat: Infinity, ease: "easeInOut" }}

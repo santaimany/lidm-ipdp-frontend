@@ -15,20 +15,27 @@ import PlayQuiz from "./pages/PlayQuiz";
 import SchoolProfile from "./pages/SchoolProfile";
 import SchoolLeaderboard from "./pages/SchoolLeaderboard";
 import BackgroundMusicLayout from "./components/BackgroundMusicLayout";
+import Greeting from './pages/Greeting'
+import Book1 from "./pages/Book1";
+import Games1 from "./pages/Games";
+import Test from "./pages/Test";
 
 function App() {
   return (
     <Router>
       <Routes>
-
+        <Route path="/test" element={<Test/>} />
         <Route path="/quiz/:chapterId/play" element={<PlayQuiz />} />
         <Route path="/chapters/:chapterId/storybooks/:storybookId" element={<StorybookDetail />} />
         <Route path="/leaderboard" element={<Leaderboard />} />
-        {/* 
-          Routes yang membutuhkan background music dimasukkan ke dalam layout ini.
-          Musik akan terus berjalan ketika berpindah antar halaman di dalam layout ini.
-          */}
+        
+
+        <Route path="/chapters/:chapterId/storybooks/:storybookId/read" element={<Book1 />}/>
+
+
         <Route element={<BackgroundMusicLayout />}>
+        <Route path="/greeting" element={<Greeting />} />
+        <Route path="/Games1" element={<Games1/>} />
           <Route path="/" element={<LandingPage />} />
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
@@ -36,10 +43,11 @@ function App() {
           <Route path="/chapters" element={<Chapters />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/chapters/:chapterId" element={<ChapterDetail />} />
-          <Route path="/chapters/:chapterId/storybooks/:storybookId" element={<StorybookDetail />} />
+          {/* <Route path="/chapters/:chapterId/storybooks/:storybookId" element={<StorybookDetail />} /> */}
           <Route path="/profile" element={<SchoolProfile />} />
           <Route path="/school/leaderboard" element={<SchoolLeaderboard />} />
           <Route path="/quiz/:quizId/start" element={<StartQuiz />} />
+           <Route path="/chapters/:chapterId/storybooks/:storybookId" element={<Book1/>} />
         </Route>
       </Routes>
     </Router>

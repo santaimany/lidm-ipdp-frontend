@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from "react";
-import { useNavigate, useParams, useLocation } from "react-router-dom";
 import axios from "axios";
-import { motion, AnimatePresence } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
+import React, { useEffect, useState } from "react";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 
-const QuizPlay = () => {
+const PlayQuiz = () => {
   const { chapterId: chapterIdFromParams } = useParams();
   const { state } = useLocation();
   const chapterId = state?.chapterId || chapterIdFromParams;
@@ -74,7 +74,7 @@ const QuizPlay = () => {
     const fetchQuizzes = async () => {
       try {
         const response = await axios.get(
-          `http://127.0.0.1:8000/api/chapters/${chapterId}/quiz`,
+          `https://mossel.up.railway.app/api/chapters/${chapterId}/quiz`,
           { params: { session_id: sessionId } }
         );
 
@@ -117,7 +117,7 @@ const QuizPlay = () => {
     try {
       const quizId = quizzes[0]?.id; // Asumsi 1 quiz per chapter
 
-      const response = await axios.post("http://127.0.0.1:8000/api/quiz/submit", {
+      const response = await axios.post("https://mossel.up.railway.app/api/quiz/submit", {
         session_id: sessionId,
         quiz_id: quizId,
         score: score,
@@ -225,7 +225,7 @@ const QuizPlay = () => {
           onClick={() => navigate(-1)}
           className="flex items-center gap-2 text-white hover:text-teal-100 transition"
         >
-          <span className="material-icons text-3xl">arrow_back</span>
+          <span className="material-icons text-3xl">&larr;</span>
           <span className="font-bold text-2xl">Back</span>
         </button>
 
@@ -437,4 +437,4 @@ const QuizPlay = () => {
   );
 };
 
-export default QuizPlay;
+export default PlayQuiz;

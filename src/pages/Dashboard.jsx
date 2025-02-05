@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
 import axios from "axios";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Noise from "../effects/Noise";
+
 
 const Dashboard = () => {
   const [chapters, setChapters] = useState([]);
@@ -14,7 +14,7 @@ const Dashboard = () => {
   const fetchChapters = async () => {
     setIsLoading(true); // Mulai loading
     try {
-      const response = await axios.get("http://127.0.0.1:8000/api/chapters", {
+      const response = await axios.get("https://mossel.up.railway.app/api/chapters", {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (response.status === 200) {
@@ -30,7 +30,7 @@ const Dashboard = () => {
   const updateChapterStatus = async (chapterId, isActive) => {
     try {
       const response = await axios.put(
-        `http://127.0.0.1:8000/api/chapters/${chapterId}`,
+        `/api/chapters/${chapterId}`,
         { is_active: isActive },
         { headers: { Authorization: `Bearer ${token}` } }
       );

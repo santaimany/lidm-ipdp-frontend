@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
 import axios from "axios";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const Leaderboard = () => {
@@ -12,9 +12,16 @@ const Leaderboard = () => {
 
     useEffect(() => {
         const fetchData = async () => {
+            // Jika session_id tidak ditemukan, tampilkan pesan error
+            if (!sessionId) {
+                setMessage("Session tidak ditemukan. Silakan login kembali.");
+                return;
+            }
+
             try {
+                console.log("Mengambil data leaderboard dengan session_id:", sessionId, "kelas:", selectedClass);
                 // Fetch Leaderboard
-                const leaderboardResponse = await axios.get("http://127.0.0.1:8000/api/leaderboard", {
+                const leaderboardResponse = await axios.get("https://mossel.up.railway.app/api/leaderboard", {
                     params: { 
                         session_id: sessionId,
                         class_level: selectedClass 
@@ -22,19 +29,30 @@ const Leaderboard = () => {
                 });
                 
                 if (leaderboardResponse.status === 200) {
+                    console.log("Data leaderboard:", leaderboardResponse.data);
+                    // Pastikan struktur data sesuai (misalnya, jika data berada di leaderboardResponse.data.data)
                     setLeaderboard(leaderboardResponse.data.data);
+                } else {
+                    console.error("Error leaderboard:", leaderboardResponse);
+                    setMessage("Gagal memuat data leaderboard.");
                 }
 
+                console.log("Mengambil data user stats dengan session_id:", sessionId);
                 // Fetch User Stats
-                const statsResponse = await axios.get("http://127.0.0.1:8000/api/user-stats", {
+                const statsResponse = await axios.get("https://mossel.up.railway.app/api/user-stats", {
                     params: { session_id: sessionId }
                 });
                 
                 if (statsResponse.status === 200) {
+                    console.log("Data user stats:", statsResponse.data);
                     setUserStats(statsResponse.data);
+                } else {
+                    console.error("Error user stats:", statsResponse);
+                    setMessage("Gagal memuat data user stats.");
                 }
             } catch (error) {
-                setMessage("Gagal memuat data.");
+                console.error("Error fetching data:", error);
+                
             }
         };
 
@@ -51,7 +69,7 @@ const Leaderboard = () => {
         return `${minutes}:${seconds.toString().padStart(2, "0")}`;
     };
 
-    // Find current user data
+    // Mencari data user saat ini di leaderboard
     const currentUser = leaderboard.find(entry => 
         entry.student.session_id === sessionId
     );
@@ -68,17 +86,17 @@ const Leaderboard = () => {
                 </button>
             </div>
             
-            <h1 className="text-5xl   mb-8 shadow-sm">Leaderboard</h1>
+            <h1 className="text-5xl mb-8 shadow-sm">Leaderboard</h1>
             {message && <p className="text-red-500 mb-4">{message}</p>}
 
-            {/* User Stats */}
+            {/* Tampilan User Stats */}
             <div className="mb-8 bg-white/20 p-6 rounded-xl shadow-lg text-center">
                 <h2 className="text-3xl font-bold mb-4">Your Result</h2>
                 <p className="text-xl">
-                    {userStats.correctAnswers} out 15 question correct
+                    {userStats.correctAnswers} out of 15 questions correct
                 </p>
                 <p className="text-xl">
-                    score: {userStats.totalQuestions > 0 
+                    Score: {userStats.totalQuestions > 0 
                         ? Math.round((userStats.correctAnswers / userStats.totalQuestions) * 100)
                         : 0}%
                 </p>
@@ -128,7 +146,7 @@ const Leaderboard = () => {
             </div>
 
             {/* Tabel Leaderboard */}
-            <div className="w-full md:w-3/4 bg-white/10 rounded-lg shadow-lg text-2xl  overflow-hidden">
+            <div className="w-full md:w-3/4 bg-white/10 rounded-lg shadow-lg text-2xl overflow-hidden">
                 <table className="w-full">
                     <thead className="bg-white/20">
                         <tr>
@@ -171,7 +189,7 @@ const Leaderboard = () => {
                 </table>
             </div>
 
-            {/* Posisi User jika di luar top 10 */}
+            {/* Tampilkan posisi user jika di luar top 10 */}
             {currentUser && !leaderboard.slice(0, 10).includes(currentUser) && (
                 <div className="mt-8 bg-white/20 p-6 rounded-xl shadow-lg w-full md:w-3/4">
                     <h2 className="text-xl font-bold mb-4">Your Position</h2>

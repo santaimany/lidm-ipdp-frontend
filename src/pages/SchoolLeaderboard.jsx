@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
 import axios from "axios";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const SchoolLeaderboard = () => {
@@ -15,7 +15,7 @@ const SchoolLeaderboard = () => {
   useEffect(() => {
     const fetchLeaderboard = async () => {
       try {
-        const response = await axios.get("http://127.0.0.1:8000/api/leaderboard", {
+        const response = await axios.get("https://mossel.up.railway.app/api/leaderboard", {
           headers: { Authorization: `Bearer ${token}` },
         });
         if (response.status === 200) {

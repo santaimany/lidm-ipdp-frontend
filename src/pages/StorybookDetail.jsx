@@ -1,57 +1,62 @@
-import React, { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
+import React, { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import Book1 from "./Book1";
 
 const StorybookDetail = () => {
-    const { chapterId, storybookId } = useParams(); // Ambil chapterId dan storybookId dari URL
+    const { chapterId, storybookId } = useParams(); 
     const [storybook, setStorybook] = useState(null);
     const [message, setMessage] = useState("");
     const sessionId = localStorage.getItem("session_id");
     const navigate = useNavigate();
 
-    // Fetch detail storybook
+    // Fetch detail storybook dari server
     useEffect(() => {
         const fetchStorybook = async () => {
             try {
-                const dummyData = {
-                    id: storybookId,
-                    title: `Storybook ${storybookId}`,
-                    content: `Ini adalah konten dari storybook ${storybookId}. Bacalah dengan seksama.`,
-                };
-                setStorybook(dummyData);
+                const response = await axios.get(`https://mossel.up.railway.app/api/chapters/${chapterId}/storybooks/${storybookId}`);
+                setStorybook(response.data);
             } catch (error) {
+                console.error("Gagal memuat detail storybook:", error.response?.data || error.message);
                 setMessage("Gagal memuat detail storybook. Silakan coba lagi.");
             }
         };
 
         fetchStorybook();
-    }, [storybookId]);
+    }, [chapterId, storybookId]);
 
     // Tandai storybook sebagai selesai
     const markAsRead = async () => {
         try {
             const response = await axios.post(
-                `http://127.0.0.1:8000/api/chapters/${chapterId}/storybooks/${storybookId}/mark-read`,
+                `https://mossel.up.railway.app/api/chapters/${chapterId}/storybooks/${storybookId}/mark-read`,
                 { session_id: sessionId }
             );
-    
-            console.log("Mark as read response:", response.data); // Debugging log
+
+            console.log("Mark as read response:", response.data);
             setMessage("Storybook berhasil ditandai sebagai selesai.");
-            navigate(`/chapters/${chapterId}`); // Kembali ke halaman chapter
+            navigate(`/chapters/${chapterId}`);
+
+            // Menjalankan musik setelah storybook selesai ditandai
+            const audioPermission = localStorage.getItem('audioPermission');
+            if (audioPermission === 'granted') {
+                const audioRef = document.querySelector('audio');
+                if (audioRef) {
+                    audioRef.play();
+                }
+            }
         } catch (error) {
             console.error("Failed to mark storybook as read:", error.response?.data || error.message);
             setMessage("Gagal menandai storybook sebagai selesai. Silakan coba lagi.");
         }
     };
-    
-    
 
     return (
-        <div className="container mx-auto p-4">
-            <h1 className="text-2xl font-bold mb-4">Detail Storybook</h1>
-            {message && <p className="mb-4 text-red-500">{message}</p>}
+        <div className=" mx-auto ">
+           
+            
 
-            {storybook && (
+            {storybook ? (
                 <div>
                     <h2 className="text-xl font-bold mb-4">{storybook.title}</h2>
                     <p className="mb-4">{storybook.content}</p>
@@ -62,6 +67,8 @@ const StorybookDetail = () => {
                         Tandai Selesai
                     </button>
                 </div>
+            ) : (
+                <Book1/>
             )}
         </div>
     );

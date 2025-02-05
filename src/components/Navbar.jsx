@@ -1,7 +1,7 @@
-import React from "react";
-import { Link, useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
-import Noise from "../effects/Noise";
+import React from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+
 
 const Navbar = () => {
     const navigate = useNavigate();
@@ -11,7 +11,7 @@ const Navbar = () => {
         try {
             const token = localStorage.getItem("authToken");
             await axios.post(
-                "http://127.0.0.1:8000/api/logout",
+                "/api/logout",
                 {},
                 { headers: { Authorization: `Bearer ${token}` } }
             );

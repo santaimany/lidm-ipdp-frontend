@@ -391,7 +391,7 @@
 [31m-        e.preventDefault();[m
 [31m-[m
 [31m-        try {[m
-[31m-            const response = await axios.post("http://127.0.0.1:8000/api/student/step1", {[m
+[31m-            const response = await axios.post("https://mossel.up.railway.app/api/student/step1", {[m
 [31m-                school_code: schoolCode,[m
 [31m-            });[m
 [31m-[m

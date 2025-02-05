@@ -1,8 +1,8 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Outlet } from "react-router-dom";
+import { Outlet, useLocation } from "react-router-dom";
 import Music from "../audio/Music.mp3";
 import { gsap } from "gsap";
-import Noise from "../effects/Noise";
+import Momo from "../assets/momo.svg"
 
 const BackgroundMusicLayout = () => {
   const audioRef = useRef(null);
@@ -13,6 +13,22 @@ const BackgroundMusicLayout = () => {
   const [overlayVisible, setOverlayVisible] = useState(true);
   const [volumeControlVisible, setVolumeControlVisible] = useState(false);
   const [showTooltip, setShowTooltip] = useState(false);
+  const location = useLocation();  // Use this to get the current path
+
+  // Mengecek status sesi di sessionStorage dan lokasi halaman
+  useEffect(() => {
+    const musicPermission = sessionStorage.getItem("musicPermission");
+
+    // Hanya tampilkan overlay di halaman utama ('/')
+    if (musicPermission === "granted") {
+      setMusicStarted(true);
+      setOverlayVisible(false);
+    } else if (location.pathname === "/") {
+      setOverlayVisible(true);
+    } else {
+      setOverlayVisible(false); // jika bukan halaman utama, hide overlay
+    }
+  }, [location.pathname]);
 
   const handleStartMusic = async () => {
     try {
@@ -21,6 +37,7 @@ const BackgroundMusicLayout = () => {
         await audioRef.current.play();
         setMusicStarted(true);
         setOverlayVisible(false);
+        sessionStorage.setItem("musicPermission", "granted"); // Menandai bahwa musik dimulai
       }
     } catch (error) {
       console.error("Audio play error:", error);
@@ -45,19 +62,19 @@ const BackgroundMusicLayout = () => {
 
     if (volumeControlRef.current) {
       const tl = gsap.timeline();
-      volumeControlVisible ?
-        tl.to(volumeControlRef.current, {
-          opacity: 1,
-          scale: 1,
-          duration: 0.3,
-          ease: "back.out(1.7)"
-        }) :
-        tl.to(volumeControlRef.current, {
-          opacity: 0,
-          scale: 0.8,
-          duration: 0.2,
-          ease: "power2.in"
-        });
+      volumeControlVisible
+        ? tl.to(volumeControlRef.current, {
+            opacity: 1,
+            scale: 1,
+            duration: 0.3,
+            ease: "back.out(1.7)",
+          })
+        : tl.to(volumeControlRef.current, {
+            opacity: 0,
+            scale: 0.8,
+            duration: 0.2,
+            ease: "power2.in",
+          });
     }
 
     if (tooltipRef.current) {
@@ -65,7 +82,7 @@ const BackgroundMusicLayout = () => {
         opacity: showTooltip ? 1 : 0,
         y: showTooltip ? -5 : 0,
         duration: 0.2,
-        ease: "power2.out"
+        ease: "power2.out",
       });
     }
   }, [overlayVisible, volumeControlVisible, showTooltip]);
@@ -74,25 +91,18 @@ const BackgroundMusicLayout = () => {
     <>
       <audio ref={audioRef} src={Music} loop style={{ display: "none" }} />
 
-      {/* Overlay */}
       {overlayVisible && (
         <div className="overlay fixed inset-0 bg-gradient-to-br from-teal-500 to-teal-900 flex flex-col items-center justify-center z-50">
-          <Noise
-            patternSize={250}
-            patternScaleX={1}
-            patternScaleY={1}
-            patternRefreshInterval={2}
-            patternAlpha={15}
-          />
           <h1 className="text-white text-4xl font-bold mb-8 text-center px-4">
             Wait! Play Background Music First 🎵
           </h1>
+          <img src={Momo} alt="" className="my-10" />
           <button
             onClick={handleStartMusic}
             className="px-8 py-4 bg-[#fdd401] hover:bg-amber-400 text-teal-900 font-bold rounded-full 
               text-2xl shadow-lg hover:shadow-xl transition-all transform hover:scale-105 z-50"
           >
-            Start Musical Journey
+            Are u Ready?
           </button>
         </div>
       )}
@@ -100,7 +110,7 @@ const BackgroundMusicLayout = () => {
       {/* Volume Controls */}
       <div className="fixed bottom-4 right-4 flex items-end gap-2 z-50">
         {musicStarted && (
-          <div 
+          <div
             className="relative"
             onMouseEnter={() => setShowTooltip(true)}
             onMouseLeave={() => setShowTooltip(false)}
@@ -117,21 +127,23 @@ const BackgroundMusicLayout = () => {
                 border-r border-b border-white/20 transform rotate-45 -translate-y-1.5" />
             </div>
 
-            {/* Volume Button */}
             <button
               onClick={() => setVolumeControlVisible(!volumeControlVisible)}
               className="p-3 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full 
                 hover:bg-white/20 transition-all shadow-lg"
             >
               <svg className="w-6 h-6 text-[#fdd401]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} 
-                  d="M15.536 8.464a5 5 0 010 7.072M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M15.536 8.464a5 5 0 010 7.072M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
+                />
               </svg>
             </button>
           </div>
         )}
 
-        {/* Volume Slider */}
         <div ref={volumeControlRef} className="origin-bottom-right">
           {volumeControlVisible && (
             <div className="bg-white/10 backdrop-blur-lg px-4 py-3 rounded-xl border border-white/20 
@@ -148,9 +160,7 @@ const BackgroundMusicLayout = () => {
                   [&::-webkit-slider-thumb]:bg-[#fdd401] [&::-webkit-slider-thumb]:rounded-full 
                   [&::-webkit-slider-thumb]:appearance-none"
               />
-              <span className="text-sm font-medium text-[#fdd401] w-8">
-                {Math.round(volume * 100)}%
-              </span>
+              <span className="text-sm font-medium text-[#fdd401] w-8">{Math.round(volume * 100)}%</span>
             </div>
           )}
         </div>

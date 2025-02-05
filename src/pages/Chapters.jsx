@@ -1,10 +1,11 @@
-import React, { useEffect, useId, useRef, useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
+import React, { useEffect, useId, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import bg from "../assets/momo.svg";
+import ScrollProgress from "../components/ScrollProgress";
 import { useOutsideClick } from "../effects/use-outside-click";
 import { cn } from "../effects/utils";
-import bg from "../assets/quiz.svg";
 
 const Chapters = () => {
   const [chapters, setChapters] = useState([]);
@@ -20,7 +21,7 @@ const Chapters = () => {
       const schoolCode = localStorage.getItem("schoolCode");
       try {
         const response = await axios.get(
-          `http://127.0.0.1:8000/api/student/chapters`,
+          `https://mossel.up.railway.app/api/student/chapters`,
           {
             params: sessionId
               ? { session_id: sessionId }
@@ -49,7 +50,10 @@ const Chapters = () => {
   useOutsideClick(ref, () => setActiveChapter(null));
 
   return (
+    
     <div className="relative min-h-screen bg-gradient-to-br from-teal-800 to-teal-900 text-white overflow-hidden">
+      <ScrollProgress />
+
       {/* Background Animations */}
       <motion.div
         animate={{ scale: [1, 1.2, 1], opacity: [0.6, 0.3, 0.6] }}

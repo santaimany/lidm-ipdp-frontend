@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import animate from "../assets/Greeting/animate_1.svg";
+import animate from "../assets/momo.svg";
 import angry from "../assets/Greeting/angry.svg";
 import ok from "../assets/Greeting/ok.svg";
 import good from "../assets/Greeting/good.svg";
@@ -67,7 +67,8 @@ console.log(greetingname);
   };
 
   return (
-    <div className="relative min-h-screen flex bg-[#00A38D] overflow-hidden justify-center">
+    <div className="relative min-h-screen flex bg-gradient-to-br from-teal-500 via-teal-700 to-teal-900 
+        bg-[length:300%_300%] animate-gradient overflow-hidden justify-center">
       {!clicked && (
         <div className="absolute top-10 text-center w-full">
           <h1 className="text-3xl font-semibold text-white first-letter:uppercase">
@@ -82,7 +83,7 @@ console.log(greetingname);
             <img
               src={animate}
               alt="animate1"
-              className="w-full max-w-[350px] h-auto"
+              className="w-full max-w-[500px] mr-20"
             />
           </div>
 
