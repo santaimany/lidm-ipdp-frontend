@@ -18,13 +18,13 @@ import BackgroundMusicLayout from "./components/BackgroundMusicLayout";
 import Greeting from './pages/Greeting'
 import Book1 from "./pages/Book1";
 import Games1 from "./pages/Games";
-import Test from "./pages/Test";
+
 
 function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/test" element={<Test/>} />
+        
         <Route path="/quiz/:chapterId/play" element={<PlayQuiz />} />
         <Route path="/chapters/:chapterId/storybooks/:storybookId" element={<StorybookDetail />} />
         <Route path="/leaderboard" element={<Leaderboard />} />

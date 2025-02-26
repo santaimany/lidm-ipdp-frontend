@@ -121,7 +121,7 @@ const Games1 = ({ onComplete }) => {
       </div>
 
       <div 
-        className="w-[540px] h-[540px] border-4 border-white rounded-2xl flex flex-wrap"
+        className="w-[480px] h-[480px] md:w-[540px] md:h-[540px] border-2 md:border-4 border-white rounded-2xl flex flex-wrap"
         style={{ 
           backgroundImage: `url(${soil})`,
           backgroundSize: 'cover'

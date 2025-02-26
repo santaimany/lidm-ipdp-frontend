@@ -69,7 +69,7 @@ const Chapters = () => {
       />
 
       {/* Header */}
-      <header className="relative z-10 bg-gradient-to-r from-teal-700 to-teal-600 py-16 overflow-hidden">
+      <header className="relative z-10 bg-gradient-to-r  from-teal-700 to-teal-600 py-16 overflow-hidden">
         <div className="absolute top-6 left-6">
           <button
             onClick={() => navigate("/")}

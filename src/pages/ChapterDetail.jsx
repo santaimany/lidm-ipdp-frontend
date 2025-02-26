@@ -195,34 +195,38 @@ const ChapterDetail = () => {
 
       {/* Header */}
       <header className="bg-gradient-to-r from-teal-700 to-teal-600 px-5 py-4 md:px-6 md:py-5 shadow-lg relative z-10">
-        <div className="max-w-4xl mx-auto flex items-center justify-between">
-          <button
-            onClick={() => navigate("/chapters")}
-            aria-label="Kembali ke daftar chapter"
-            className="text-white text-xl flex items-center space-x-2 hover:text-yellow-200 transition-colors focus:outline focus:outline-2 focus:outline-yellow-300"
-          >
-            <span className="text-3xl">←</span>
-            <span className="hidden sm:inline">Back</span>
-          </button>
+  <div className="relative flex items-center justify-center">
+    {/* Tombol Back di sebelah kiri */}
+    <button
+      onClick={() => navigate("/chapters")}
+      aria-label="Kembali ke daftar chapter"
+      className="absolute left-0 text-white text-xl flex items-center space-x-2 hover:text-yellow-200 transition-colors focus:outline focus:outline-2 focus:outline-yellow-300"
+    >
+      <span className="text-3xl">←</span>
+      <span className="hidden sm:inline text-3xl">Back</span>
+    </button>
 
-          <h1 className="text-2xl md:text-3xl font-bold text-white text-center">
-            STUDY TIME
-          </h1>
+    {/* Teks STUDY TIME di tengah */}
+    <h1 className="text-2xl md:text-3xl font-bold text-white text-center">
+      STUDY TIME
+    </h1>
 
-          <button
-            onClick={() => setShowGuide(true)}
-            aria-label="Buka panduan belajar"
-            className="bg-yellow-300 px-4 py-2 md:px-5 md:py-3 rounded-lg hover:bg-yellow-400 transition-colors flex items-center space-x-2 focus:outline focus:outline-2 focus:outline-yellow-300"
-          >
-            <span className="text-2xl" aria-hidden="true">📘</span>
-            <span className="hidden sm:inline text-lg">PANDUAN</span>
-          </button>
-        </div>
-      </header>
+    {/* Tombol Panduan di sebelah kanan */}
+    <button
+      onClick={() => setShowGuide(true)}
+      aria-label="Buka panduan belajar"
+      className="absolute right-0 bg-yellow-300 px-4 py-2 md:px-5 md:py-3 rounded-lg hover:bg-yellow-400 transition-colors flex items-center space-x-2 focus:outline focus:outline-2 focus:outline-yellow-300"
+    >
+      <span className="text-2xl" aria-hidden="true">📘</span>
+      <span className="hidden sm:inline text-lg">PANDUAN</span>
+    </button>
+  </div>
+</header>
+
 
       {/* Main Content */}
-      <main className="relative z-10 max-w-4xl mx-auto px-5 py-8 md:py-10">
-        <div className="flex flex-col items-center space-y-6 md:space-y-8">
+      <main className="relative justify-center items-center z-10 max-w-4xl mx-auto px-5 py-8 md:py-10">
+        <div className="flex flex-col items-center mx-auto space-y-6 md:space-y-8">
           {storyBooks.map((storybook, index) => {
             const isLocked = !(index === 0 || storyBooks[index - 1]?.is_read);
             const showElement = currentUnlockedIndex === index && !quizUnlocked;
@@ -250,9 +254,9 @@ const ChapterDetail = () => {
                   <motion.div
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
-                    className="absolute -top-14 left-[34%] transform z-20"
+                    className="absolute -top-14  transform z-20 right-0 left-0 w-full flex jsutify-center items-center"
                   >
-                    <div className="bg-red-100 border border-red-300 text-red-700 px-4 py-2 rounded-lg shadow-lg flex items-center space-x-2">
+                    <div className="bg-red-100 border border-red-300 text-red-700 px-4 py-2 mx-auto rounded-lg shadow-lg space-x-1 ">
                       <span className="text-base font-semibold">
                         Complete the previous storybook!
                       </span>
@@ -279,7 +283,7 @@ const ChapterDetail = () => {
                         ? "bg-teal-600 text-white"
                         : isLocked
                         ? "bg-gray-300 cursor-not-allowed"
-                        : "bg-yellow-300 hover:bg-yellow-400 hover:scale-105"
+                        : "bg-yellow-300 hover:bg-yellow-400 hover:scale-105  "
                     }`}
                     onClick={() =>
                       !isLocked &&

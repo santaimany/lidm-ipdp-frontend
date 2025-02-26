@@ -61,7 +61,10 @@ const StyledWrapper = styled.div`
     transform: translateY(-15%);
     transition: .15s;
     color: rgb(var(--secondary));
+    
   }
+
+  
 
   .btn-class-name:active .front {
     transform: translateY(0%);

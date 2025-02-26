@@ -70,7 +70,7 @@ const RegisterStudent = () => {
       </div>
 
       {/* **Main Content** */}
-      <div className="relative flex flex-col md:flex-row items-center justify-center w-full max-w-5xl bg-transparent">
+      <div className="relative flex flex-col md:flex-row items-center justify-center w-full max-w-7xl  bg-transparent">
         {/* **Form Container (left side)** */}
         <motion.img
                 src={roket}
@@ -85,7 +85,7 @@ const RegisterStudent = () => {
                     ease: "linear"
                 }}
             />
-        <div className="w-full md:w-1/2 bg-white p-10 rounded-xl shadow-xl animate-fade-in">
+        <div className="w-full md:w-1/2 bg-white p-10 rounded-xl shadow-xl animate-fade-in md:mr-20">
           <h1 className="text-3xl font-bold text-teal-600 mb-6">Registrasi Siswa</h1>
           <p className="text-gray-500 mb-6">
             Isi informasi berikut untuk memulai perjalanan belajar Anda!
