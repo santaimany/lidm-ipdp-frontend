@@ -3,27 +3,24 @@ import React, { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
 // Import asset halaman
-import pages1 from "../assets/book1/pages1.svg";
-import pages10 from "../assets/book1/pages10.svg";
-import pages11 from "../assets/book1/pages11.svg";
-import pages12 from "../assets/book1/pages12.svg";
-import pages13 from "../assets/book1/pages13.svg";
-import pages14 from "../assets/book1/pages14.svg";
-import pages15 from "../assets/book1/pages15.svg";
-import pages16 from "../assets/book1/pages16.svg";
-import pages17 from "../assets/book1/pages17.svg";
-import pages18 from "../assets/book1/pages18.svg";
-import pages19 from "../assets/book1/pages19.svg";
-import pages2 from "../assets/book1/pages2.svg";
-import pages3 from "../assets/book1/pages3.svg";
-import pages4 from "../assets/book1/pages4.svg";
-import pages5 from "../assets/book1/pages5.svg";
-import pages6 from "../assets/book1/pages6.svg";
-import pages7 from "../assets/book1/pages7.svg";
-import pages8 from "../assets/book1/pages8.svg";
-import pages9 from "../assets/book1/pages9.svg";
+import pages1 from "../assets/book3/pages1.svg";
+import pages10 from "../assets/book3/pages10.svg";
+import pages11 from "../assets/book3/pages11.svg";
+import pages12 from "../assets/book3/pages12.svg";
+import pages13 from "../assets/book3/pages13.svg";
+import pages14 from "../assets/book3/pages14.svg";
+import pages15 from "../assets/book3/pages15.svg";
+import pages16 from "../assets/book3/pages16.svg";
+import pages2 from "../assets/book3/pages2.svg";
+import pages3 from "../assets/book3/pages3.svg";
+import pages4 from "../assets/book3/pages4.svg";
+import pages5 from "../assets/book3/pages5.svg";
+import pages6 from "../assets/book3/pages6.svg";
+import pages7 from "../assets/book3/pages7.svg";
+import pages8 from "../assets/book3/pages8.svg";
+import pages9 from "../assets/book3/pages9.svg";
 
-const Book1 = () => {
+const Book3 = () => {
   // Deklarasi state dan variabel-variabel hook
   const [currentPage, setCurrentPage] = useState(0);
   const [isFlipping, setIsFlipping] = useState(false);
@@ -31,7 +28,7 @@ const Book1 = () => {
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
   const [activeImage, setActiveImage] = useState(null);
   const [message, setMessage] = useState("");
-
+  
   // Mengambil parameter URL dan fungsi navigasi
   const { chapterId, storybookId } = useParams();
   const navigate = useNavigate();
@@ -74,7 +71,7 @@ const Book1 = () => {
       );
       console.log("Mark as read response:", response.data);
       setMessage("Storybook berhasil ditandai sebagai selesai.");
-
+      
       // Navigasi kembali ke halaman chapter setelah 1 detik
       setTimeout(() => {
         navigate(`/chapters/${chapterId}`);
@@ -93,9 +90,7 @@ const Book1 = () => {
         "Failed to mark storybook as read:",
         error.response?.data || error.message
       );
-      setMessage(
-        "Gagal menandai storybook sebagai selesai. Silakan coba lagi."
-      );
+      setMessage("Gagal menandai storybook sebagai selesai. Silakan coba lagi.");
     }
   };
 
@@ -103,175 +98,85 @@ const Book1 = () => {
   const pages = [
     {
       content: (
-        <img
-          src={pages1}
-          alt="Page 1"
-          className="h-full w-auto mx-auto rounded"
-        />
+        <img src={pages1} alt="Page 1" className="h-full w-auto mx-auto rounded" />
       ),
     },
     {
       content: (
-        <img
-          src={pages2}
-          alt="Page 2"
-          className="h-full w-auto mx-auto rounded-xl"
-        />
+        <img src={pages2} alt="Page 2" className="h-full w-auto mx-auto rounded-xl" />
       ),
     },
     {
       content: (
-        <img
-          src={pages3}
-          alt="Page 3"
-          className="h-full w-auto mx-auto rounded-xl"
-        />
+        <img src={pages3} alt="Page 3" className="h-full w-auto mx-auto rounded-xl" />
       ),
     },
     {
       content: (
-        <img
-          src={pages4}
-          alt="Page 4"
-          className="h-full w-auto mx-auto rounded-xl"
-        />
+        <img src={pages4} alt="Page 4" className="h-full w-auto mx-auto rounded-xl" />
       ),
     },
     {
       content: (
-        <img
-          src={pages5}
-          alt="Page 5"
-          className="h-full w-auto mx-auto rounded-xl"
-        />
+        <img src={pages5} alt="Page 5" className="h-full w-auto mx-auto rounded-xl" />
       ),
     },
     {
       content: (
-        <img
-          src={pages6}
-          alt="Page 6"
-          className="h-full w-auto mx-auto rounded-xl"
-        />
+        <img src={pages6} alt="Page 6" className="h-full w-auto mx-auto rounded-xl" />
       ),
     },
     {
       content: (
-        <img
-          src={pages7}
-          alt="Page 7"
-          className="h-full w-auto mx-auto rounded-xl"
-        />
+        <img src={pages7} alt="Page 7" className="h-full w-auto mx-auto rounded-xl" />
       ),
     },
     {
       content: (
-        <img
-          src={pages8}
-          alt="Page 8"
-          className="h-full w-auto mx-auto rounded-xl"
-        />
+        <img src={pages8} alt="Page 8" className="h-full w-auto mx-auto rounded-xl" />
       ),
     },
     {
       content: (
-        <img
-          src={pages9}
-          alt="Page 9"
-          className="h-full w-auto mx-auto rounded-xl"
-        />
+        <img src={pages9} alt="Page 9" className="h-full w-auto mx-auto rounded-xl" />
       ),
     },
     {
       content: (
-        <img
-          src={pages10}
-          alt="Page 10"
-          className="h-full w-auto mx-auto rounded-xl"
-        />
+        <img src={pages10} alt="Page 10" className="h-full w-auto mx-auto rounded-xl" />
       ),
     },
     {
       content: (
-        <img
-          src={pages11}
-          alt="Page 11"
-          className="h-full w-auto mx-auto rounded-xl"
-        />
+        <img src={pages11} alt="Page 11" className="h-full w-auto mx-auto rounded-xl" />
       ),
     },
     {
       content: (
-        <img
-          src={pages12}
-          alt="Page 12"
-          className="h-full w-auto mx-auto rounded-xl"
-        />
+        <img src={pages12} alt="Page 12" className="h-full w-auto mx-auto rounded-xl" />
       ),
     },
     {
       content: (
-        <img
-          src={pages13}
-          alt="Page 13"
-          className="h-full w-auto mx-auto rounded-xl"
-        />
+        <img src={pages13} alt="Page 13" className="h-full w-auto mx-auto rounded-xl" />
       ),
     },
     {
       content: (
-        <img
-          src={pages14}
-          alt="Page 14"
-          className="h-full w-auto mx-auto rounded-xl"
-        />
+        <img src={pages14} alt="Page 14" className="h-full w-auto mx-auto rounded-xl" />
       ),
     },
     {
       content: (
-        <img
-          src={pages15}
-          alt="Page 15"
-          className="h-full w-auto mx-auto rounded-xl"
-        />
+        <img src={pages15} alt="Page 15" className="h-full w-auto mx-auto rounded-xl" />
       ),
     },
     {
       content: (
-        <img
-          src={pages16}
-          alt="Page 16"
-          className="h-full w-auto mx-auto rounded-xl"
-        />
+        <img src={pages16} alt="Page 16" className="h-full w-auto mx-auto rounded-xl" />
       ),
     },
-    {
-      content: (
-        <img
-          src={pages17}
-          alt="Page 17"
-          className="h-full w-auto mx-auto rounded-xl"
-        />
-      ),
-    },
-    {
-      content: (
-        <img
-          src={pages18}
-          alt="Page 18"
-          className="h-full w-auto mx-auto rounded-xl"
-        />
-      ),
-    },
-    {
-      content: (
-        <img
-          src={pages19}
-          alt="Page 19"
-          className="h-full w-auto mx-auto rounded-xl"
-        />
-      ),
-    },
+    
     // Konten ke-20: Halaman untuk menandai selesai membaca
     {
       content: (
@@ -397,4 +302,4 @@ const Book1 = () => {
   );
 };
 
-export default Book1;
+export default Book3;

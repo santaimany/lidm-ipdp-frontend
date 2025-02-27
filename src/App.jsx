@@ -16,7 +16,7 @@ import SchoolProfile from "./pages/SchoolProfile";
 import SchoolLeaderboard from "./pages/SchoolLeaderboard";
 import BackgroundMusicLayout from "./components/BackgroundMusicLayout";
 import Greeting from './pages/Greeting'
-import Book1 from "./pages/Book1";
+import Book2 from "./pages/Book2";
 import Games1 from "./pages/Games";
 
 
@@ -30,7 +30,7 @@ function App() {
         <Route path="/leaderboard" element={<Leaderboard />} />
         
 
-        <Route path="/chapters/:chapterId/storybooks/:storybookId/read" element={<Book1 />}/>
+        <Route path="/chapters/:chapterId/storybooks/:storybookId/read" element={<Book2 />}/>
 
 
         <Route element={<BackgroundMusicLayout />}>
@@ -47,7 +47,7 @@ function App() {
           <Route path="/profile" element={<SchoolProfile />} />
           <Route path="/school/leaderboard" element={<SchoolLeaderboard />} />
           <Route path="/quiz/:quizId/start" element={<StartQuiz />} />
-           <Route path="/chapters/:chapterId/storybooks/:storybookId" element={<Book1/>} />
+           <Route path="/chapters/:chapterId/storybooks/:storybookId" element={<Book2/>} />
         </Route>
       </Routes>
     </Router>
